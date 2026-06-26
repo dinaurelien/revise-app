@@ -72,6 +72,8 @@ body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(-
 .sc-badge{position:absolute;top:10px;right:10px;border-radius:6px;padding:2px 6px;font-size:9px;font-weight:800;text-transform:uppercase;}
 .subj-card.fr .sc-badge{background:var(--fr);color:white;}
 .subj-card.ma .sc-badge{background:var(--ma);color:white;}
+.subj-card.hg .sc-badge{background:#D97706;color:white;}
+.subj-card.sc .sc-badge{background:#059669;color:white;}
 
 /* STREAK MINI */
 .streak-row{display:flex;gap:6px;margin:0 16px 14px;overflow-x:auto;padding-bottom:4px;}
@@ -90,6 +92,8 @@ body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(-
 .topic-tag{border-radius:100px;padding:4px 12px;font-size:11px;font-weight:800;}
 .topic-tag.fr{background:var(--fr-bg);color:var(--fr);}
 .topic-tag.ma{background:var(--ma-bg);color:var(--ma);}
+.topic-tag.hg{background:#FEF3C7;color:#92400E;}
+.topic-tag.sc{background:#D1FAE5;color:#065F46;}
 
 .q-card{background:var(--card);border-radius:var(--radius);padding:24px 20px;margin:0 16px 14px;box-shadow:var(--shadow);text-align:center;}
 .q-emoji{font-size:38px;margin-bottom:10px;}
@@ -382,6 +386,86 @@ function genMultDiv() {
 }
 
 /* ══════════════════════════════════════════════════════
+   BANQUE D'EXERCICES — HISTOIRE-GÉO
+══════════════════════════════════════════════════════ */
+
+const HIST = [
+  {id:'h01',s:'hg',t:'hist',e:'🏛️',q:"Combien y a-t-il de grandes périodes dans l'histoire ?",c:['5','4','6','3'],a:'5',ex:"Les 5 grandes périodes : Préhistoire → Antiquité → Moyen Âge → Temps modernes → Époque contemporaine."},
+  {id:'h02',s:'hg',t:'hist',e:'🏛️',q:"Quelle est la PREMIÈRE grande période de l'histoire ?",c:['La Préhistoire','L\'Antiquité','Le Moyen Âge','Les Temps modernes'],a:'La Préhistoire',ex:"La Préhistoire est la période la plus ancienne, avant l'invention de l'écriture."},
+  {id:'h03',s:'hg',t:'hist',e:'🏛️',q:"La Préhistoire se termine avec l'invention de :",c:["l'écriture","la roue","le feu","l'arc"],a:"l'écriture",ex:"La Préhistoire se termine et l'Antiquité commence avec l'invention de l'écriture (vers 3300 av. J.-C.)."},
+  {id:'h04',s:'hg',t:'hist',e:'🏛️',q:"Les hommes de la Préhistoire vivaient :",c:['dans des grottes et cabanes','dans des châteaux','dans des pyramides','dans des immeubles'],a:'dans des grottes et cabanes',ex:"Les hommes préhistoriques vivaient dans des grottes ou construisaient des huttes en bois."},
+  {id:'h05',s:'hg',t:'hist',e:'🏛️',q:"Quelle grande période suit l'Antiquité ?",c:['Le Moyen Âge','La Préhistoire','Les Temps modernes','L\'Époque contemporaine'],a:'Le Moyen Âge',ex:"L'ordre est : Préhistoire → Antiquité → Moyen Âge → Temps modernes → Époque contemporaine."},
+  {id:'h06',s:'hg',t:'hist',e:'🏛️',q:"L'Antiquité est la période des :",c:['Grecs et Romains','chevaliers','rois de France','Napoléon'],a:'Grecs et Romains',ex:"L'Antiquité est la période des grandes civilisations grecque, romaine et égyptienne."},
+  {id:'h07',s:'hg',t:'hist',e:'🏛️',q:"Qui construisait les pyramides ?",c:['Les Égyptiens','Les Romains','Les Gaulois','Les Grecs'],a:'Les Égyptiens',ex:"Les pyramides ont été construites par les Égyptiens de l'Antiquité pour leurs pharaons."},
+  {id:'h08',s:'hg',t:'hist',e:'🏛️',q:"Au Moyen Âge, les seigneurs habitaient dans :",c:['des châteaux forts','des pyramides','des igloos','des gratte-ciels'],a:'des châteaux forts',ex:"Au Moyen Âge, les seigneurs vivaient dans des châteaux forts pour se protéger."},
+  {id:'h09',s:'hg',t:'hist',e:'🏛️',q:"Jeanne d'Arc est une héroïne :",c:['du Moyen Âge','de la Préhistoire','de l\'Antiquité','des Temps modernes'],a:'du Moyen Âge',ex:"Jeanne d'Arc a vécu au XVe siècle (Moyen Âge). Elle a aidé à libérer la France des Anglais."},
+  {id:'h10',s:'hg',t:'hist',e:'🏛️',q:"Qui était Vercingétorix ?",c:['Un chef gaulois','Un pharaon','Un chevalier','Un roi romain'],a:'Un chef gaulois',ex:"Vercingétorix était le chef des Gaulois qui s'est battu contre Jules César à Alésia."},
+  {id:'h11',s:'hg',t:'hist',e:'🏛️',q:"La Révolution française a eu lieu en :",c:['1789','1515','1066','1492'],a:'1789',ex:"La Révolution française débute en 1789 avec la prise de la Bastille."},
+  {id:'h12',s:'hg',t:'hist',e:'🏛️',q:"Comment s'appelaient les habitants de la France à l'Antiquité ?",c:['Les Gaulois','Les Romains','Les Francs','Les Vikings'],a:'Les Gaulois',ex:"La France s'appelait la Gaule à l'Antiquité et ses habitants étaient les Gaulois."},
+  {id:'h13',s:'hg',t:'hist',e:'🏛️',q:"Napoléon Bonaparte fut :",c:['Général puis Empereur','Roi au Moyen Âge','Chef gaulois','Pharaon'],a:'Général puis Empereur',ex:"Napoléon Bonaparte fut d'abord général puis Empereur des Français (1804-1815). Époque contemporaine."},
+  {id:'h14',s:'hg',t:'hist',e:'🏛️',q:"L'époque contemporaine est la période :",c:['la plus récente','la plus ancienne','du Moyen Âge','de la Rome antique'],a:'la plus récente',ex:"L'Époque contemporaine est la dernière période, de la Révolution française à aujourd'hui."},
+  {id:'h15',s:'hg',t:'hist',e:'🏛️',q:"La frise chronologique se lit :",c:['de gauche (ancien) à droite (récent)','de droite à gauche','de haut en bas','sans ordre précis'],a:'de gauche (ancien) à droite (récent)',ex:"Sur une frise chronologique, la gauche représente le passé et la droite le présent."},
+];
+
+const GEOGR = [
+  {id:'gg01',s:'hg',t:'geog',e:'🌍',q:"Combien y a-t-il de continents selon la classification française ?",c:['5','6','7','4'],a:'5',ex:"En France, on apprend 5 continents : Europe, Amérique, Afrique, Asie, Océanie."},
+  {id:'gg02',s:'hg',t:'geog',e:'🌍',q:"Dans quel continent se trouve la France ?",c:['En Europe','En Asie','En Afrique','En Amérique'],a:'En Europe',ex:"La France est située en Europe, à l'ouest du continent européen."},
+  {id:'gg03',s:'hg',t:'geog',e:'🌍',q:"Quelle est la capitale de la France ?",c:['Paris','Lyon','Marseille','Bordeaux'],a:'Paris',ex:"Paris est la capitale de la France. C'est la ville la plus peuplée du pays."},
+  {id:'gg04',s:'hg',t:'geog',e:'🌍',q:"Quel est le plus long fleuve de France ?",c:['La Loire','La Seine','Le Rhône','La Garonne'],a:'La Loire',ex:"La Loire est le plus long fleuve de France (1006 km). Elle se jette dans l'Atlantique."},
+  {id:'gg05',s:'hg',t:'geog',e:'🌍',q:"Quel fleuve traverse Paris ?",c:['La Seine','La Loire','Le Rhin','Le Rhône'],a:'La Seine',ex:"La Seine traverse Paris. Elle se jette dans la Manche en Normandie."},
+  {id:'gg06',s:'hg',t:'geog',e:'🌍',q:"Où se trouvent les Alpes ?",c:["À l'est de la France","Au nord","À l'ouest","Au sud-ouest"],a:"À l'est de la France",ex:"Les Alpes se trouvent à l'est de la France, à la frontière avec l'Italie et la Suisse."},
+  {id:'gg07',s:'hg',t:'geog',e:'🌍',q:"Quel est le plus haut sommet de France et d'Europe ?",c:['Le Mont Blanc','Le Puy de Dôme','Le Mont-Dore','Le Vercors'],a:'Le Mont Blanc',ex:"Le Mont Blanc (4808 m) est le plus haut sommet de France et d'Europe occidentale."},
+  {id:'gg08',s:'hg',t:'geog',e:'🌍',q:"La France est bordée à l'ouest par :",c:["l'Océan Atlantique","la Méditerranée","le Rhin","les Alpes"],a:"l'Océan Atlantique",ex:"La côte ouest de la France donne sur l'Océan Atlantique."},
+  {id:'gg09',s:'hg',t:'geog',e:'🌍',q:"Quelle mer borde le sud de la France ?",c:['La Méditerranée','L\'Atlantique','La Manche','La mer du Nord'],a:'La Méditerranée',ex:"La mer Méditerranée borde le sud de la France (Côte d'Azur, Languedoc)."},
+  {id:'gg10',s:'hg',t:'geog',e:'🌍',q:"La Manche sépare la France de :",c:["l'Angleterre","l'Espagne","l'Italie","l'Allemagne"],a:"l'Angleterre",ex:"La Manche est le bras de mer qui sépare la France de l'Angleterre."},
+  {id:'gg11',s:'hg',t:'geog',e:'🌍',q:"Quel pays est au sud de la France ?",c:["L'Espagne","L'Angleterre","La Belgique","La Suisse"],a:"L'Espagne",ex:"L'Espagne est au sud de la France, séparée par les Pyrénées."},
+  {id:'gg12',s:'hg',t:'geog',e:'🌍',q:"Les 4 points cardinaux sont :",c:['Nord, Sud, Est, Ouest','Haut, Bas, Gauche, Droite','Nord, Est, Bas, Ouest','Amont, Aval, Centre, Bord'],a:'Nord, Sud, Est, Ouest',ex:"Les 4 points cardinaux sont : Nord (N), Sud (S), Est (E), Ouest (O)."},
+  {id:'gg13',s:'hg',t:'geog',e:'🌍',q:"Sur une carte, le Nord est généralement :",c:['en haut','en bas','à gauche','à droite'],a:'en haut',ex:"Par convention, le Nord se trouve en haut sur les cartes géographiques."},
+  {id:'gg14',s:'hg',t:'geog',e:'🌍',q:"Quel continent est au sud de l'Europe, séparé par la Méditerranée ?",c:["L'Afrique","L'Amérique","L'Asie","L'Océanie"],a:"L'Afrique",ex:"L'Afrique est le continent au sud de l'Europe, séparé par la mer Méditerranée."},
+  {id:'gg15',s:'hg',t:'geog',e:'🌍',q:"Les Pyrénées séparent la France de :",c:["l'Espagne","l'Italie","la Belgique","la Suisse"],a:"l'Espagne",ex:"Les Pyrénées sont une chaîne de montagnes qui forme la frontière naturelle entre la France et l'Espagne."},
+];
+
+/* ══════════════════════════════════════════════════════
+   BANQUE D'EXERCICES — SCIENCES
+══════════════════════════════════════════════════════ */
+
+const VIVANT = [
+  {id:'v01',s:'sc',t:'vivant',e:'🌱',q:"Un animal qui mange uniquement des végétaux est :",c:['herbivore','carnivore','omnivore','insectivore'],a:'herbivore',ex:"Herbivore = qui mange des végétaux. Ex : la vache, le lapin, le cheval."},
+  {id:'v02',s:'sc',t:'vivant',e:'🌱',q:"Un animal qui mange uniquement d'autres animaux est :",c:['carnivore','herbivore','omnivore','frugivore'],a:'carnivore',ex:"Carnivore = qui mange de la viande. Ex : le lion, le loup, l'aigle."},
+  {id:'v03',s:'sc',t:'vivant',e:'🌱',q:"Un animal qui mange des végétaux ET des animaux est :",c:['omnivore','herbivore','carnivore','insectivore'],a:'omnivore',ex:"Omnivore = qui mange de tout. Ex : l'homme, l'ours, le cochon."},
+  {id:'v04',s:'sc',t:'vivant',e:'🌱',q:"Les insectes ont combien de pattes ?",c:['6','4','8','10'],a:'6',ex:"Les insectes ont toujours 6 pattes. L'araignée en a 8 mais ce n'est pas un insecte (c'est une arachnide)."},
+  {id:'v05',s:'sc',t:'vivant',e:'🌱',q:"Quelle partie de la plante absorbe l'eau du sol ?",c:['Les racines','Les feuilles','La tige','Les fleurs'],a:'Les racines',ex:"Les racines ancrent la plante dans le sol et absorbent l'eau et les sels minéraux."},
+  {id:'v06',s:'sc',t:'vivant',e:'🌱',q:"Les feuilles servent principalement à :",c:['capter la lumière pour nourrir la plante','absorber l\'eau','tenir la plante droite','attirer les insectes'],a:'capter la lumière pour nourrir la plante',ex:"Les feuilles réalisent la photosynthèse : elles captent la lumière pour fabriquer la nourriture de la plante."},
+  {id:'v07',s:'sc',t:'vivant',e:'🌱',q:"Un œuf donne naissance à un poussin. On dit que la poule est :",c:['ovipare','vivipare','amphibie','hibernante'],a:'ovipare',ex:"Ovipare = qui se reproduit en pondant des œufs. Ex : les oiseaux, les reptiles, les insectes."},
+  {id:'v08',s:'sc',t:'vivant',e:'🌱',q:"La chenille se transforme en :",c:['papillon','coccinelle','fourmi','abeille'],a:'papillon',ex:"La chenille est la larve du papillon. Elle se transforme en chrysalide puis en papillon (métamorphose)."},
+  {id:'v09',s:'sc',t:'vivant',e:'🌱',q:"Quel organe du corps humain pompe le sang ?",c:['Le cœur','Le poumon','Le foie','Le cerveau'],a:'Le cœur',ex:"Le cœur est un muscle qui pompe le sang dans tout le corps, environ 70 fois par minute."},
+  {id:'v10',s:'sc',t:'vivant',e:'🌱',q:"Les poumons servent à :",c:['respirer','digérer','voir','entendre'],a:'respirer',ex:"Les poumons permettent de respirer : ils absorbent l'oxygène et rejettent le CO₂."},
+  {id:'v11',s:'sc',t:'vivant',e:'🌱',q:"La chaîne alimentaire commence toujours par :",c:['un végétal','un animal','un champignon','un insecte'],a:'un végétal',ex:"Toute chaîne alimentaire commence par un végétal (producteur) qui utilise l'énergie du soleil."},
+  {id:'v12',s:'sc',t:'vivant',e:'🌱',q:"Herbe → Lapin → Renard. Que mange le renard ?",c:['Le lapin','L\'herbe','Les deux','Rien'],a:'Le lapin',ex:"La flèche indique 'est mangé par'. Herbe mangée par le lapin, qui est mangé par le renard."},
+  {id:'v13',s:'sc',t:'vivant',e:'🌱',q:"Un animal qui hiberne en hiver :",c:["dort tout l'hiver","migre vers le sud","change de pelage","chasse plus souvent"],a:"dort tout l'hiver",ex:"L'hibernation est un sommeil profond en hiver pour économiser de l'énergie. Ex : l'ours, la marmotte."},
+  {id:'v14',s:'sc',t:'vivant',e:'🌱',q:"Pour germer, une graine a besoin de :",c:['eau et chaleur','seulement de la lumière','seulement du sol','de froid'],a:'eau et chaleur',ex:"Pour germer, une graine a besoin d'eau et de chaleur. La lumière est nécessaire ensuite."},
+  {id:'v15',s:'sc',t:'vivant',e:'🌱',q:"Lequel est un mammifère ?",c:['La baleine','Le perroquet','La grenouille','Le serpent'],a:'La baleine',ex:"La baleine est un mammifère marin : elle allaite ses petits et respire avec des poumons."},
+];
+
+const MATIERE = [
+  {id:'mt01',s:'sc',t:'mat',e:'🔬',q:"L'eau peut exister sous combien d'états ?",c:['3','2','4','1'],a:'3',ex:"L'eau existe sous 3 états : solide (glace), liquide (eau), gazeux (vapeur d'eau)."},
+  {id:'mt02',s:'sc',t:'mat',e:'🔬',q:"La glace est de l'eau à l'état :",c:['solide','liquide','gazeux','chaud'],a:'solide',ex:"La glace est de l'eau gelée, à l'état solide. Elle se forme quand la température descend sous 0°C."},
+  {id:'mt03',s:'sc',t:'mat',e:'🔬',q:"La vapeur d'eau est de l'eau à l'état :",c:['gazeux','solide','liquide','froid'],a:'gazeux',ex:"La vapeur d'eau est de l'eau à l'état gazeux, invisible dans l'air chaud."},
+  {id:'mt04',s:'sc',t:'mat',e:'🔬',q:"L'eau bout à :",c:['100°C','0°C','50°C','37°C'],a:'100°C',ex:"L'eau bout à 100°C. Elle se transforme alors en vapeur d'eau (évaporation rapide)."},
+  {id:'mt05',s:'sc',t:'mat',e:'🔬',q:"Quand la glace fond et redevient liquide, c'est :",c:['la fusion','la solidification','l\'évaporation','la condensation'],a:'la fusion',ex:"Solide → Liquide = fusion. La glace fond à 0°C."},
+  {id:'mt06',s:'sc',t:'mat',e:'🔬',q:"Quand l'eau liquide se transforme en glace, c'est :",c:['la solidification','la fusion','l\'évaporation','la condensation'],a:'la solidification',ex:"Liquide → Solide = solidification (= congélation). Cela se produit à 0°C."},
+  {id:'mt07',s:'sc',t:'mat',e:'🔬',q:"Un objet qui laisse passer la lumière est :",c:['transparent','opaque','solide','magnétique'],a:'transparent',ex:"Transparent = laisse passer la lumière. Ex : le verre, l'eau claire."},
+  {id:'mt08',s:'sc',t:'mat',e:'🔬',q:"Un objet qui ne laisse pas passer la lumière est :",c:['opaque','transparent','translucide','brillant'],a:'opaque',ex:"Opaque = ne laisse pas passer la lumière. Un objet opaque fait de l'ombre."},
+  {id:'mt09',s:'sc',t:'mat',e:'🔬',q:"L'aimant attire :",c:["le fer et l'acier","le bois","le plastique","le verre"],a:"le fer et l'acier",ex:"L'aimant attire les métaux ferreux (fer, acier, nickel). Il n'attire pas l'aluminium, le cuivre ou le plastique."},
+  {id:'mt10',s:'sc',t:'mat',e:'🔬',q:"Pour mesurer la température, on utilise :",c:['un thermomètre','une règle','une balance','un verre doseur'],a:'un thermomètre',ex:"Le thermomètre mesure la température en degrés Celsius (°C)."},
+  {id:'mt11',s:'sc',t:'mat',e:'🔬',q:"Quelle source d'énergie vient du Soleil ?",c:["L'énergie solaire","L'énergie éolienne","L'énergie hydraulique","L'énergie nucléaire"],a:"L'énergie solaire",ex:"Les panneaux solaires captent l'énergie du Soleil pour produire de l'électricité."},
+  {id:'mt12',s:'sc',t:'mat',e:'🔬',q:"Le vent fait tourner des :",c:['éoliennes','panneaux solaires','barrages','centrales'],a:'éoliennes',ex:"Les éoliennes transforment la force du vent en électricité."},
+  {id:'mt13',s:'sc',t:'mat',e:'🔬',q:"Le cycle de l'eau recommence sans cesse car :",c:["l'eau s'évapore et retombe en pluie","l'eau disparaît dans le sol","la mer grossit chaque année","les nuages créent de l'eau"],a:"l'eau s'évapore et retombe en pluie",ex:"Le cycle de l'eau : pluie → rivières → mers → évaporation → nuages → pluie... sans fin."},
+  {id:'mt14',s:'sc',t:'mat',e:'🔬',q:"Pour peser un objet, on utilise :",c:['une balance','un thermomètre','une règle','un verre doseur'],a:'une balance',ex:"La balance mesure la masse (le poids) d'un objet en grammes (g) ou kilogrammes (kg)."},
+  {id:'mt15',s:'sc',t:'mat',e:'🔬',q:"Le squelette du corps humain sert à :",c:['protéger les organes et se tenir droit','pomper le sang','respirer','digérer'],a:'protéger les organes et se tenir droit',ex:"Le squelette (206 os chez l'adulte) soutient le corps et protège les organes vitaux."},
+];
+
+/* ══════════════════════════════════════════════════════
    BADGES
 ══════════════════════════════════════════════════════ */
 
@@ -407,6 +491,10 @@ const TOPIC_META={
   div:{lbl:'Division',e:'➗',s:'ma'},
   frac:{lbl:'Fractions',e:'½',s:'ma'},
   geo:{lbl:'Géométrie',e:'📐',s:'ma'},
+  hist:{lbl:'Histoire',e:'🏛️',s:'hg'},
+  geog:{lbl:'Géographie',e:'🌍',s:'hg'},
+  vivant:{lbl:'Le vivant',e:'🌱',s:'sc'},
+  mat:{lbl:'La matière',e:'🔬',s:'sc'},
 };
 
 /* ══════════════════════════════════════════════════════
@@ -480,6 +568,14 @@ function pickSession(subject){
   // Séance uniquement Maths (10 exercices)
   if(subject==='ma'){
     return shuffle([...pickN('mult',4),...pickN('div',2),...pickN('frac',2),...pickN('geo',2)]);
+  }
+  // Séance uniquement Histoire-Géo (10 exercices)
+  if(subject==='hg'){
+    return shuffle([...pickN('hist',5),...pickN('geog',5)]);
+  }
+  // Séance uniquement Sciences (10 exercices)
+  if(subject==='sc'){
+    return shuffle([...pickN('vivant',5),...pickN('mat',5)]);
   }
   // Séance mixte (13 exercices)
   return shuffle([
@@ -573,9 +669,10 @@ function renderHome(){
     streakHtml+=`<div class="streak-day ${cl}">${ico}</div>`;
   }
   streakHtml+='</div>';
-  // Subject grid — fr & ma clickable, hg & sc coming soon
   const frCount=S.exercises.filter(e=>e.s==='fr').length;
   const maCount=S.exercises.filter(e=>e.s==='ma').length;
+  const hgCount=S.exercises.filter(e=>e.s==='hg').length;
+  const scCount=S.exercises.filter(e=>e.s==='sc').length;
   const subjGrid=`<div class="subj-grid">
     <div class="subj-card fr" data-action="start:fr">
       <div class="sc-badge">Tap !</div>
@@ -589,15 +686,17 @@ function renderHome(){
       <div class="sc-name">Mathématiques</div>
       <div class="sc-count">${maCount} exercices</div>
     </div>
-    <div class="subj-card hg soon">
+    <div class="subj-card hg" data-action="start:hg">
+      <div class="sc-badge">Tap !</div>
       <div class="sc-emoji">🗺️</div>
       <div class="sc-name">Histoire-Géo</div>
-      <div class="sc-count">Bientôt disponible</div>
+      <div class="sc-count">${hgCount} exercices</div>
     </div>
-    <div class="subj-card sc soon">
+    <div class="subj-card sc" data-action="start:sc">
+      <div class="sc-badge">Tap !</div>
       <div class="sc-emoji">🔬</div>
       <div class="sc-name">Sciences</div>
-      <div class="sc-count">Bientôt disponible</div>
+      <div class="sc-count">${scCount} exercices</div>
     </div>
   </div>`;
   const statsRow=`<div class="stats-grid" style="margin-bottom:14px">
@@ -619,9 +718,9 @@ function renderSession(){
   const idx=S.sessionIdx;
   const pct=Math.round((idx/total)*100);
   const tm=TOPIC_META[ex.t]||{lbl:ex.t,e:'📝',s:'fr'};
-  const subj=ex.s==='fr'?'fr':'ma';
+  const subj=ex.s;
   const pbar=`<div class="pbar-wrap"><div class="pbar-fill" style="width:${pct}%"></div></div>`;
-  const subjLabel=S.sessionSubject==='fr'?'📖 Français':S.sessionSubject==='ma'?'🔢 Maths':'🎲 Mixte';
+  const subjLabel=S.sessionSubject==='fr'?'📖 Français':S.sessionSubject==='ma'?'🔢 Maths':S.sessionSubject==='hg'?'🗺️ Histoire-Géo':S.sessionSubject==='sc'?'🔬 Sciences':'🎲 Mixte';
   const hdr=`<div class="sess-hdr"><div class="sess-counter">❓ ${idx+1} / ${total} &nbsp;<span style="font-size:11px;color:var(--muted)">${subjLabel}</span></div><div class="topic-tag ${subj}">${tm.e} ${esc(tm.lbl)}</div></div>`;
   const qCard=`<div class="q-card"><div class="q-emoji">${ex.e}</div><div class="q-text">${esc(ex.q)}</div></div>`;
   const nc=ex.c.length;
@@ -657,7 +756,7 @@ function renderResult(){
   const msgs=['Continue comme ça !','Bien joué !','Super travail !','Parfait ! Incroyable !'];
   const msg=msgs[r.stars]||'Bien joué !';
   const replaySub=r.subject||'';
-  const replayLabel=r.subject==='fr'?'📖 Encore du Français !':r.subject==='ma'?'🔢 Encore des Maths !':'🎲 Encore une séance !';
+  const replayLabel=r.subject==='fr'?'📖 Encore du Français !':r.subject==='ma'?'🔢 Encore des Maths !':r.subject==='hg'?'🗺️ Encore de l\'Histoire-Géo !':r.subject==='sc'?'🔬 Encore des Sciences !':'🎲 Encore une séance !';
   let earnedHtml='';
   r.earned.forEach(bid=>{
     const b=BADGES.find(x=>x.id===bid);
@@ -731,7 +830,7 @@ document.addEventListener('click',e=>{
 
 function init(){
   loadState();
-  S.exercises=[...CONJ,...ORTH,...GRAM,...VOC,...FRAC,...GEO,...genMultDiv()];
+  S.exercises=[...CONJ,...ORTH,...GRAM,...VOC,...FRAC,...GEO,...genMultDiv(),...HIST,...GEOGR,...VIVANT,...MATIERE];
   updateStreak();
   S.loaded=true;
   render();
