@@ -58,13 +58,20 @@ body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(-
 
 /* SUBJECT GRID */
 .subj-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 16px 14px;}
-.subj-card{border-radius:var(--radius);padding:16px;cursor:pointer;transition:transform .15s;box-shadow:var(--shadow);}
+.subj-card{border-radius:var(--radius);padding:16px;cursor:pointer;transition:transform .15s;box-shadow:var(--shadow);position:relative;}
 .subj-card.fr{background:var(--fr-bg);}
 .subj-card.ma{background:var(--ma-bg);}
-.subj-card:active{transform:scale(0.96);}
+.subj-card.hg{background:#FEF3C7;}
+.subj-card.sc{background:#D1FAE5;}
+.subj-card.soon{opacity:.55;cursor:default;}
+.subj-card:not(.soon):active{transform:scale(0.96);}
+.subj-card:not(.soon):hover{filter:brightness(0.97);}
 .sc-emoji{font-size:26px;}
 .sc-name{font-size:13px;font-weight:800;margin-top:6px;color:var(--text);}
 .sc-count{font-size:11px;color:var(--muted);margin-top:2px;}
+.sc-badge{position:absolute;top:10px;right:10px;border-radius:6px;padding:2px 6px;font-size:9px;font-weight:800;text-transform:uppercase;}
+.subj-card.fr .sc-badge{background:var(--fr);color:white;}
+.subj-card.ma .sc-badge{background:var(--ma);color:white;}
 
 /* STREAK MINI */
 .streak-row{display:flex;gap:6px;margin:0 16px 14px;overflow-x:auto;padding-bottom:4px;}
@@ -158,7 +165,6 @@ body{font-family:'Nunito','Segoe UI',sans-serif;background:var(--bg);color:var(-
 ══════════════════════════════════════════════════════ */
 
 const CONJ = [
-  // Groupe 1 présent
   {id:'c01',s:'fr',t:'conj',e:'✏️',q:'Complète : "Nous ___ la chanson." (CHANTER, présent)',c:['chantons','chantez','chantent','chantions'],a:'chantons',ex:'Au présent, NOUS → terminaison -ONS : nous chant-ons.'},
   {id:'c02',s:'fr',t:'conj',e:'✏️',q:'Complète : "Tu ___ dans la cour." (JOUER, présent)',c:['joues','jouez','jouons','jouent'],a:'joues',ex:'Au présent, TU → terminaison -ES : tu joue-s.'},
   {id:'c03',s:'fr',t:'conj',e:'✏️',q:'Complète : "Il ___ la télévision." (REGARDER, présent)',c:['regarde','regardes','regardons','regardez'],a:'regarde',ex:'Au présent, IL → terminaison -E : il regard-e.'},
@@ -167,125 +173,103 @@ const CONJ = [
   {id:'c06',s:'fr',t:'conj',e:'✏️',q:"Complète : \"J'___ le chocolat.\" (AIMER, présent)",c:['aime','aimes','aiment','aimons'],a:'aime',ex:"Au présent, J' → terminaison -E : j'aim-e."},
   {id:'c07',s:'fr',t:'conj',e:'✏️',q:'Complète : "Nous ___ de la pizza." (MANGER, présent)',c:['mangeons','mangons','mangez','mangent'],a:'mangeons',ex:'Verbe en -GER : on ajoute E avant -ONS → nous mang-eons.'},
   {id:'c08',s:'fr',t:'conj',e:'✏️',q:'Complète : "Ils ___ le ballon." (LANCER, présent)',c:['lancent','lance','lancez','lançons'],a:'lancent',ex:'Au présent, ILS → terminaison -ENT : ils lance-nt.'},
-  // Être présent
   {id:'c09',s:'fr',t:'conj',e:'✏️',q:'Complète : "Je ___ content." (ÊTRE, présent)',c:['suis','es','est','sommes'],a:'suis',ex:'ÊTRE au présent : je SUIS, tu es, il est, nous sommes, vous êtes, ils sont.'},
   {id:'c10',s:'fr',t:'conj',e:'✏️',q:'Complète : "Tu ___ courageux." (ÊTRE, présent)',c:['es','est','suis','êtes'],a:'es',ex:'ÊTRE au présent : tu ES.'},
   {id:'c11',s:'fr',t:'conj',e:'✏️',q:'Complète : "Elle ___ à la maison." (ÊTRE, présent)',c:['est','es','suis','sont'],a:'est',ex:'ÊTRE au présent : il/elle EST.'},
   {id:'c12',s:'fr',t:'conj',e:'✏️',q:'Complète : "Nous ___ en vacances." (ÊTRE, présent)',c:['sommes','êtes','sont','suis'],a:'sommes',ex:'ÊTRE au présent : nous SOMMES.'},
   {id:'c13',s:'fr',t:'conj',e:'✏️',q:'Complète : "Vous ___ prêts ?" (ÊTRE, présent)',c:['êtes','sommes','sont','suis'],a:'êtes',ex:'ÊTRE au présent : vous ÊTES.'},
   {id:'c14',s:'fr',t:'conj',e:'✏️',q:'Complète : "Ils ___ fatigués." (ÊTRE, présent)',c:['sont','est','êtes','sommes'],a:'sont',ex:'ÊTRE au présent : ils/elles SONT.'},
-  // Avoir présent
   {id:'c15',s:'fr',t:'conj',e:'✏️',q:"Complète : \"J'___ un chien.\" (AVOIR, présent)",c:['ai','a','avons','as'],a:'ai',ex:"AVOIR au présent : j'AI, tu as, il a, nous avons, vous avez, ils ont."},
   {id:'c16',s:'fr',t:'conj',e:'✏️',q:'Complète : "Tu ___ raison." (AVOIR, présent)',c:['as','a','ai','avez'],a:'as',ex:'AVOIR au présent : tu AS.'},
   {id:'c17',s:'fr',t:'conj',e:'✏️',q:'Complète : "Elle ___ faim." (AVOIR, présent)',c:['a','ai','as','avons'],a:'a',ex:'AVOIR au présent : il/elle A.'},
   {id:'c18',s:'fr',t:'conj',e:'✏️',q:'Complète : "Nous ___ un beau jardin." (AVOIR, présent)',c:['avons','avez','ont','as'],a:'avons',ex:'AVOIR au présent : nous AVONS.'},
   {id:'c19',s:'fr',t:'conj',e:'✏️',q:'Complète : "Ils ___ peur." (AVOIR, présent)',c:['ont','avons','avez','as'],a:'ont',ex:'AVOIR au présent : ils/elles ONT.'},
-  // Aller présent
   {id:'c20',s:'fr',t:'conj',e:'✏️',q:"Complète : \"Je ___ à l'école.\" (ALLER, présent)",c:['vais','vas','va','allons'],a:'vais',ex:'ALLER au présent : je VAIS, tu vas, il va, nous allons, vous allez, ils vont.'},
   {id:'c21',s:'fr',t:'conj',e:'✏️',q:'Complète : "Tu ___ bien ?" (ALLER, présent)',c:['vas','vais','va','allez'],a:'vas',ex:'ALLER au présent : tu VAS.'},
   {id:'c22',s:'fr',t:'conj',e:'✏️',q:'Complète : "Il ___ au parc." (ALLER, présent)',c:['va','vas','vais','vont'],a:'va',ex:'ALLER au présent : il/elle VA.'},
   {id:'c23',s:'fr',t:'conj',e:'✏️',q:'Complète : "Nous ___ au cinéma." (ALLER, présent)',c:['allons','allez','vont','vas'],a:'allons',ex:'ALLER au présent : nous ALLONS.'},
-  // Groupe 2 présent
   {id:'c24',s:'fr',t:'conj',e:'✏️',q:'Complète : "Je ___ mes devoirs." (FINIR, présent)',c:['finis','finit','finissons','finissez'],a:'finis',ex:'FINIR au présent : je FINIS (groupe 2 → -IS au singulier).'},
   {id:'c25',s:'fr',t:'conj',e:'✏️',q:'Complète : "Elle ___ vite." (GRANDIR, présent)',c:['grandit','grandis','grandissons','grandissent'],a:'grandit',ex:'GRANDIR au présent : il/elle GRANDIT.'},
   {id:'c26',s:'fr',t:'conj',e:'✏️',q:'Complète : "Nous ___ le bon chemin." (CHOISIR, présent)',c:['choisissons','choisissez','choisit','choisissent'],a:'choisissons',ex:'CHOISIR au présent : nous CHOISISSONS (-issons avec double S).'},
   {id:'c27',s:'fr',t:'conj',e:'✏️',q:'Complète : "Vous ___ la bonne réponse." (CHOISIR, présent)',c:['choisissez','choisissons','choisit','choisissent'],a:'choisissez',ex:'CHOISIR au présent : vous CHOISISSEZ (-issez).'},
-  // Imparfait
   {id:'c28',s:'fr',t:'conj',e:'✏️',q:'Complète : "Hier, je ___ une chanson." (CHANTER, imparfait)',c:['chantais','chantait','chantions','chanterais'],a:'chantais',ex:"À l'imparfait, JE → terminaison -AIS : je chant-ais."},
   {id:'c29',s:'fr',t:'conj',e:'✏️',q:'Complète : "Avant, il ___ souvent." (JOUER, imparfait)',c:['jouait','jouais','jouions','jouerait'],a:'jouait',ex:"À l'imparfait, IL → terminaison -AIT : il jou-ait."},
   {id:'c30',s:'fr',t:'conj',e:'✏️',q:'Complète : "Chaque soir, nous ___ la télé." (REGARDER, imparfait)',c:['regardions','regardait','regardais','regarderons'],a:'regardions',ex:"À l'imparfait, NOUS → terminaison -IONS : nous regard-ions."},
   {id:'c31',s:'fr',t:'conj',e:'✏️',q:"Complète : \"Quand j'étais petit, j'___ des bonbons.\" (ADORER, imparfait)",c:['adorais','adorait','adorions','adorerai'],a:'adorais',ex:"À l'imparfait, J' → terminaison -AIS : j'ador-ais."},
   {id:'c32',s:'fr',t:'conj',e:'✏️',q:'Complète : "Elles ___ beaucoup." (PARLER, imparfait)',c:['parlaient','parlait','parlions','parleront'],a:'parlaient',ex:"À l'imparfait, ELLES → terminaison -AIENT : elles parl-aient."},
   {id:'c33',s:'fr',t:'conj',e:'✏️',q:'Complète : "Avant, tu ___ tôt le soir." (DÎNER, imparfait)',c:['dînais','dînait','dînions','dînerai'],a:'dînais',ex:"À l'imparfait, TU → terminaison -AIS : tu dîn-ais."},
-  // Futur simple
   {id:'c34',s:'fr',t:'conj',e:'✏️',q:'Complète : "Demain, je ___ la vaisselle." (LAVER, futur)',c:['laverai','laveras','lavera','laverons'],a:'laverai',ex:'Au futur simple, JE → terminaison -RAI : je laver-ai.'},
   {id:'c35',s:'fr',t:'conj',e:'✏️',q:'Complète : "Dimanche, tu ___ avec tes amis." (JOUER, futur)',c:['joueras','jouerai','jouera','joueront'],a:'joueras',ex:'Au futur simple, TU → terminaison -RAS : tu jouer-as.'},
   {id:'c36',s:'fr',t:'conj',e:'✏️',q:'Complète : "Le soleil ___ demain." (BRILLER, futur)',c:['brillera','brillerai','brilleras','brilleront'],a:'brillera',ex:'Au futur simple, IL → terminaison -RA : il briller-a.'},
   {id:'c37',s:'fr',t:'conj',e:'✏️',q:"Complète : \"Nous ___ avant l'examen.\" (RÉVISER, futur)",c:['réviserons','réviserez','réviseront','révisera'],a:'réviserons',ex:'Au futur simple, NOUS → terminaison -RONS : nous réviser-ons.'},
-  // Passé composé avec avoir
   {id:'c38',s:'fr',t:'conj',e:'✏️',q:"Complète : \"Hier, j'___ un gâteau.\" (MANGER, passé composé)",c:['ai mangé','a mangé','avons mangé','as mangé'],a:'ai mangé',ex:"Passé composé : J' + AI + participe passé → j'ai mang-é."},
   {id:'c39',s:'fr',t:'conj',e:'✏️',q:'Complète : "Elle ___ son travail." (FINIR, passé composé)',c:['a fini','ai fini','avons fini','ont fini'],a:'a fini',ex:'Passé composé : il/elle + A + participe passé → a fin-i.'},
   {id:'c40',s:'fr',t:'conj',e:'✏️',q:'Complète : "Nous ___ un film." (REGARDER, passé composé)',c:['avons regardé','ont regardé','avez regardé','a regardé'],a:'avons regardé',ex:'Passé composé : nous + AVONS + participe passé → avons regard-é.'},
-  // Passé composé avec être
   {id:'c41',s:'fr',t:'conj',e:'✏️',q:"Complète : \"Il ___ à Paris.\" (ALLER, passé composé)",c:['est allé','a allé','ont allé','était allé'],a:'est allé',ex:"ALLER se conjugue avec ÊTRE : il EST allé. Le participe s'accorde avec le sujet."},
   {id:'c42',s:'fr',t:'conj',e:'✏️',q:'Complète : "Les filles ___ à la piscine." (ALLER, passé composé)',c:['sont allées','ont allé','sont allés','étaient allées'],a:'sont allées',ex:'Les filles (féminin pluriel) → sont allé-ES (accord avec être).'},
 ];
 
 const ORTH = [
-  // Homophones a/à (6)
   {id:'o01',s:'fr',t:'orth',e:'📝',q:'"Elle ___ faim." → a ou à ?',c:['a','à'],a:'a',ex:'"A" = verbe AVOIR. Astuce : remplace par "avait" → "elle avait faim" ✓'},
   {id:'o02',s:'fr',t:'orth',e:'📝',q:"\"Je vais ___ l'école.\" → a ou à ?",c:['a','à'],a:'à',ex:'"À" est une préposition de lieu. "Avait" ne marche pas ici.'},
   {id:'o03',s:'fr',t:'orth',e:'📝',q:'"Papa ___ acheté du pain." → a ou à ?',c:['a','à'],a:'a',ex:'"A acheté" = passé composé. "Papa avait acheté" ✓'},
   {id:'o04',s:'fr',t:'orth',e:'📝',q:'"Ce gâteau est ___ la fraise." → a ou à ?',c:['a','à'],a:'à',ex:'"À la fraise" = préposition de caractérisation. "Avait" ne marche pas.'},
   {id:'o05',s:'fr',t:'orth',e:'📝',q:'"Mon chien ___ soif." → a ou à ?',c:['a','à'],a:'a',ex:'"A soif" = avoir soif. "Mon chien avait soif" ✓'},
   {id:'o06',s:'fr',t:'orth',e:'📝',q:'"Il habite ___ Paris." → a ou à ?',c:['a','à'],a:'à',ex:'"À Paris" = préposition de lieu.'},
-  // Homophones ou/où (4)
   {id:'o07',s:'fr',t:'orth',e:'📝',q:'"Tu veux du lait ___ du jus ?" → ou ou où ?',c:['ou','où'],a:'ou',ex:'"Ou" = choix. Remplace par "ou bien" → "du lait ou bien du jus" ✓'},
   {id:'o08',s:'fr',t:'orth',e:'📝',q:'"___ habites-tu ?" → ou ou où ?',c:['ou','où'],a:'où',ex:'"Où" = lieu ou direction. "Ou bien habites-tu" ne marche pas ✗'},
   {id:'o09',s:'fr',t:'orth',e:'📝',q:"\"Il est allé ___ il voulait.\" → ou ou où ?",c:['ou','où'],a:'où',ex:'"Où" = là où (lieu). "Là où il voulait" ✓'},
   {id:'o10',s:'fr',t:'orth',e:'📝',q:'"Un stylo ___ un crayon ?" → ou ou où ?',c:['ou','où'],a:'ou',ex:'"Ou" = choix. "Un stylo ou bien un crayon" ✓'},
-  // Homophones on/ont (4)
   {id:'o11',s:'fr',t:'orth',e:'📝',q:'"Ils ___ faim." → on ou ont ?',c:['on','ont'],a:'ont',ex:'"Ont" = verbe AVOIR (ils ont). "ils avaient faim" ✓'},
   {id:'o12',s:'fr',t:'orth',e:'📝',q:'"___ entend les oiseaux." → on ou ont ?',c:['on','ont'],a:'on',ex:'"On" = pronom sujet (= nous). "Avaient entend" ✗'},
   {id:'o13',s:'fr',t:'orth',e:'📝',q:'"Les enfants ___ joué." → on ou ont ?',c:['on','ont'],a:'ont',ex:'"Ont joué" = passé composé. "Les enfants avaient joué" ✓'},
   {id:'o14',s:'fr',t:'orth',e:'📝',q:'"___ part demain matin." → on ou ont ?',c:['on','ont'],a:'on',ex:'"On" = pronom sujet (= nous). On peut remplacer par "nous partons".'},
-  // Homophones son/sont (4)
   {id:'o15',s:'fr',t:'orth',e:'📝',q:'"Les fleurs ___ belles." → son ou sont ?',c:['son','sont'],a:'sont',ex:'"Sont" = verbe ÊTRE. "Les fleurs étaient belles" ✓'},
   {id:'o16',s:'fr',t:'orth',e:'📝',q:'"Il range ___ cartable." → son ou sont ?',c:['son','sont'],a:'son',ex:'"Son" = déterminant possessif (son, sa, ses). "Étaient" ne marche pas.'},
   {id:'o17',s:'fr',t:'orth',e:'📝',q:'"Elles ___ parties." → son ou sont ?',c:['son','sont'],a:'sont',ex:'"Sont parties" = passé composé avec être. "Elles étaient parties" ✓'},
   {id:'o18',s:'fr',t:'orth',e:'📝',q:"\"J'aime ___ chien.\" → son ou sont ?",c:['son','sont'],a:'son',ex:'"Son chien" = déterminant possessif. "Son" peut se remplacer par "mon".'},
-  // Homophones et/est (4)
   {id:'o19',s:'fr',t:'orth',e:'📝',q:'"Le ciel ___ bleu." → et ou est ?',c:['et','est'],a:'est',ex:'"Est" = verbe ÊTRE. "Le ciel était bleu" ✓'},
   {id:'o20',s:'fr',t:'orth',e:'📝',q:'"Il mange ___ boit." → et ou est ?',c:['et','est'],a:'et',ex:'"Et" = conjonction (relie deux verbes). "Était" ne marche pas ici.'},
   {id:'o21',s:'fr',t:'orth',e:'📝',q:'"La mer ___ calme." → et ou est ?',c:['et','est'],a:'est',ex:'"Est" = verbe ÊTRE. "La mer était calme" ✓'},
   {id:'o22',s:'fr',t:'orth',e:'📝',q:'"Un chat ___ un chien jouent." → et ou est ?',c:['et','est'],a:'et',ex:'"Et" relie deux noms. On ne peut pas dire "un chat était un chien".'},
-  // Accord nom-adjectif (6)
   {id:'o23',s:'fr',t:'orth',e:'📝',q:'Les filles sont... (INTELLIGENT)',c:['intelligentes','intelligents','intelligent','intelligente'],a:'intelligentes',ex:'Filles = féminin pluriel → intelligent + e + s = INTELLIGENTES.'},
   {id:'o24',s:'fr',t:'orth',e:'📝',q:'Le garçon est... (GRAND)',c:['grand','grande','grands','grandes'],a:'grand',ex:'Garçon = masculin singulier → GRAND (forme de base, sans ajout).'},
   {id:'o25',s:'fr',t:'orth',e:'📝',q:'La maison est... (BEAU)',c:['belle','beau','beaux','belles'],a:'belle',ex:'Maison = féminin singulier → beau → BELLE au féminin.'},
   {id:'o26',s:'fr',t:'orth',e:'📝',q:'Les chats sont... (NOIR)',c:['noirs','noir','noire','noires'],a:'noirs',ex:'Chats = masculin pluriel → noir + s = NOIRS.'},
   {id:'o27',s:'fr',t:'orth',e:'📝',q:'Une chemise... (BLANC)',c:['blanche','blanc','blancs','blanches'],a:'blanche',ex:'Chemise = féminin singulier → blanc → BLANCHE (ch- au féminin).'},
   {id:'o28',s:'fr',t:'orth',e:'📝',q:'Des fleurs... (JOLI)',c:['jolies','joli','jolis','jolie'],a:'jolies',ex:'Fleurs = féminin pluriel → joli + e + s = JOLIES.'},
-  // Pluriels irréguliers (5)
   {id:'o29',s:'fr',t:'orth',e:'📝',q:'Quel est le pluriel de "cheval" ?',c:['chevaux','chevals','cheval','chevales'],a:'chevaux',ex:'Les mots en -AL font leur pluriel en -AUX : cheval → chevaux.'},
   {id:'o30',s:'fr',t:'orth',e:'📝',q:'Quel est le pluriel de "œil" ?',c:['yeux','œils','œiles','yeils'],a:'yeux',ex:'"Œil" est irrégulier : son pluriel est YEUX (à mémoriser !).'},
   {id:'o31',s:'fr',t:'orth',e:'📝',q:'Quel est le pluriel de "genou" ?',c:['genoux','genous','genoues','genoux'],a:'genoux',ex:'Bijou, caillou, chou, genou, hibou, joujou, pou → pluriel en -OUX.'},
   {id:'o32',s:'fr',t:'orth',e:'📝',q:'Quel est le pluriel de "tableau" ?',c:['tableaux','tableaus','tablaux','tableos'],a:'tableaux',ex:'Les mots en -EAU font leur pluriel en -EAUX : tableau → tableaux.'},
-  {id:'o33',s:'fr',t:'orth',e:'📝',q:'Quel est le pluriel de "bal" ?',c:['bals','baux','bales','balx'],a:'bals',ex:'Attention : "bal" fait "bals" (exception aux mots en -AL). Autres exceptions : festival, carnaval...'},
-  // Orthographe lexicale (3)
+  {id:'o33',s:'fr',t:'orth',e:'📝',q:'Quel est le pluriel de "bal" ?',c:['bals','baux','bales','balx'],a:'bals',ex:'Attention : "bal" fait "bals" (exception aux mots en -AL).'},
   {id:'o34',s:'fr',t:'orth',e:'📝',q:'Entre deux voyelles, pour faire le son [s], on écrit :',c:['ss','s','c','ç'],a:'ss',ex:'"S" seul entre deux voyelles = son [z]. Pour le son [s] → "SS" : poisson, pousser, basse.'},
   {id:'o35',s:'fr',t:'orth',e:'📝',q:'Quelle phrase est correctement écrite ?',c:['Demain, il fait beau.','demain, il fait beau.','Demain il fait beau','Demain, Il fait beau.'],a:'Demain, il fait beau.',ex:'Une phrase commence par une MAJUSCULE et se termine par un POINT.'},
   {id:'o36',s:'fr',t:'orth',e:'📝',q:'Laquelle de ces phrases est correcte ?',c:['Il court vite.','Il coure vite.','Il cours vite.','Il cour vite.'],a:'Il court vite.',ex:'COURIR au présent : je cours, tu cours, il COURT (t final muet).'},
 ];
 
 const GRAM = [
-  // Nature - Nom (5)
   {id:'g01',s:'fr',t:'gram',e:'📚',q:'Lequel de ces mots est un NOM ?',c:['maison','courir','grand','rapidement'],a:'maison',ex:'Un NOM désigne une personne, un animal, une chose ou une idée.'},
   {id:'g02',s:'fr',t:'gram',e:'📚',q:'Lequel de ces mots est un NOM ?',c:['bonheur','manger','beau','souvent'],a:'bonheur',ex:'"Bonheur" est un nom : il désigne un sentiment, une idée.'},
   {id:'g03',s:'fr',t:'gram',e:'📚',q:'Dans "Le petit chat dort.", quel est le NOM ?',c:['chat','petit','dort','Le'],a:'chat',ex:'"Chat" est un nom commun (animal). "Petit" = adjectif, "dort" = verbe.'},
   {id:'g04',s:'fr',t:'gram',e:'📚',q:'Lequel de ces mots est un NOM PROPRE ?',c:['Paris','ville','grand','habiter'],a:'Paris',ex:'Un NOM PROPRE commence par une MAJUSCULE. Ex : Paris, Marie, France.'},
   {id:'g05',s:'fr',t:'gram',e:'📚',q:'Dans "Les oiseaux chantent.", quel est le NOM ?',c:['oiseaux','chantent','Les','fort'],a:'oiseaux',ex:'"Oiseaux" est un nom (animal) au pluriel. "Les" = déterminant.'},
-  // Nature - Verbe (4)
   {id:'g06',s:'fr',t:'gram',e:'📚',q:'Dans "Le chien court vite.", quel est le VERBE ?',c:['court','chien','vite','Le'],a:'court',ex:'Le VERBE indique une action ou un état. Il se conjugue.'},
-  {id:'g07',s:'fr',t:'gram',e:'📚',q:'Lequel de ces mots est un VERBE ?',c:['chanter','chanteur','chanson','chant'],a:'chanter',ex:'"Chanter" est un verbe à l\'infinitif. On peut le conjuguer : je chante...'},
+  {id:'g07',s:'fr',t:'gram',e:'📚',q:'Lequel de ces mots est un VERBE ?',c:['chanter','chanteur','chanson','chant'],a:'chanter',ex:"\"Chanter\" est un verbe à l'infinitif. On peut le conjuguer : je chante..."},
   {id:'g08',s:'fr',t:'gram',e:'📚',q:'Dans "Elle mange une pomme.", quel est le VERBE ?',c:['mange','pomme','Elle','une'],a:'mange',ex:'"Mange" est le verbe conjugué. On peut le changer de temps : "elle mangera".'},
-  {id:'g09',s:'fr',t:'gram',e:'📚',q:"Lequel de ces mots est un VERBE à l'infinitif ?",c:['nager','nageur','natation','nage'],a:'nager',ex:'"Nager" est un verbe à l\'infinitif. "Nageur" et "natation" sont des noms.'},
-  // Nature - Adjectif (4)
+  {id:'g09',s:'fr',t:'gram',e:'📚',q:"Lequel de ces mots est un VERBE à l'infinitif ?",c:['nager','nageur','natation','nage'],a:'nager',ex:"\"Nager\" est un verbe à l'infinitif. \"Nageur\" et \"natation\" sont des noms."},
   {id:'g10',s:'fr',t:'gram',e:'📚',q:'Dans "Un grand arbre vert pousse.", quel est un ADJECTIF ?',c:['grand','arbre','pousse','Un'],a:'grand',ex:"L'ADJECTIF qualifie le nom et s'accorde avec lui."},
   {id:'g11',s:'fr',t:'gram',e:'📚',q:'Lequel de ces mots est un ADJECTIF ?',c:['magnifique','magnifier','magnificence','magnifiquement'],a:'magnifique',ex:'"Magnifique" est un adjectif qualificatif. Il décrit un nom.'},
   {id:'g12',s:'fr',t:'gram',e:'📚',q:'Quel adjectif peut qualifier "une fleur" ?',c:['odorante','odeur','sentir','parfum'],a:'odorante',ex:'"Odorante" est un adjectif : une fleur odorante. "Odeur" est un nom.'},
-  {id:'g13',s:'fr',t:'gram',e:'📚',q:'Dans "Une jolie petite maison.", combien y a-t-il d\'ADJECTIFS ?',c:['2','1','3','0'],a:'2',ex:'"Jolie" et "petite" sont les deux adjectifs qui décrivent "maison".'},
-  // Nature - Déterminant (3)
+  {id:'g13',s:'fr',t:'gram',e:'📚',q:"Dans \"Une jolie petite maison.\", combien y a-t-il d'ADJECTIFS ?",c:['2','1','3','0'],a:'2',ex:'"Jolie" et "petite" sont les deux adjectifs qui décrivent "maison".'},
   {id:'g14',s:'fr',t:'gram',e:'📚',q:'Lequel de ces mots est un DÉTERMINANT ?',c:['les','chats','courent','vite'],a:'les',ex:'Les DÉTERMINANTS accompagnent le nom : le, la, les, un, une, des, mon, ton, son...'},
   {id:'g15',s:'fr',t:'gram',e:'📚',q:'Quel est le déterminant dans "Mon chien aboie" ?',c:['Mon','chien','aboie','fort'],a:'Mon',ex:'"Mon" est un déterminant possessif. Il accompagne le nom "chien".'},
   {id:'g16',s:'fr',t:'gram',e:'📚',q:"Lequel de ces mots N'est PAS un déterminant ?",c:['courir','le','une','des'],a:'courir',ex:'"Le", "une", "des" sont des déterminants. "Courir" est un verbe.'},
-  // Accord sujet-verbe (5)
   {id:'g17',s:'fr',t:'gram',e:'📚',q:'Choisis la forme correcte : "Les oiseaux ___ dans le ciel."',c:['volent','vole','voles','volons'],a:'volent',ex:'"Les oiseaux" = sujet PLURIEL → verbe au pluriel : ils vol-ent.'},
   {id:'g18',s:'fr',t:'gram',e:'📚',q:'Choisis la forme correcte : "La fille ___."',c:['court','courent','courons','coures'],a:'court',ex:'"La fille" = sujet SINGULIER → verbe singulier : elle cour-t.'},
   {id:'g19',s:'fr',t:'gram',e:'📚',q:'Choisis la forme correcte : "Mon frère et moi ___."',c:['jouons','joue','jouent','joues'],a:'jouons',ex:'"Mon frère et moi" = NOUS → nous jou-ons.'},
-  {id:'g20',s:'fr',t:'gram',e:'📚',q:'Le SUJET de "Les fleurs poussent." est :',c:['Les fleurs','poussent','Les','fleurs'],a:'Les fleurs',ex:'Le sujet = qui fait l\'action. "Les fleurs" poussent → sujet = "Les fleurs".'},
-  {id:'g21',s:'fr',t:'gram',e:'📚',q:'Dans "Le chat mange la souris.", "la souris" est :',c:["le complément d'objet direct","le sujet","le verbe","l'adjectif"],a:"le complément d'objet direct",ex:'"La souris" est le COD (Complément d\'Objet Direct) du verbe manger.'},
-  // Types de phrases (4)
+  {id:'g20',s:'fr',t:'gram',e:'📚',q:'Le SUJET de "Les fleurs poussent." est :',c:['Les fleurs','poussent','Les','fleurs'],a:'Les fleurs',ex:"Le sujet = qui fait l'action. \"Les fleurs\" poussent → sujet = \"Les fleurs\"."},
+  {id:'g21',s:'fr',t:'gram',e:'📚',q:'Dans "Le chat mange la souris.", "la souris" est :',c:["le complément d'objet direct","le sujet","le verbe","l'adjectif"],a:"le complément d'objet direct",ex:"\"La souris\" est le COD (Complément d'Objet Direct) du verbe manger."},
   {id:'g22',s:'fr',t:'gram',e:'📚',q:'Quelle phrase est EXCLAMATIVE ?',c:['Quelle belle journée !','Il fait beau.','Fait-il beau ?','Le soleil brille.'],a:'Quelle belle journée !',ex:"Une phrase exclamative exprime un sentiment fort et se termine par '!'."},
   {id:'g23',s:'fr',t:'gram',e:'📚',q:'Quelle phrase est INTERROGATIVE ?',c:['As-tu faim ?',"J'ai faim.",'Quelle faim !','Mange !'],a:'As-tu faim ?',ex:"Une phrase interrogative pose une question et se termine par '?'."},
   {id:'g24',s:'fr',t:'gram',e:'📚',q:'Quelle phrase est NÉGATIVE ?',c:['Je ne mange pas.','Je mange.','Mange !','Mange-t-il ?'],a:'Je ne mange pas.',ex:'Une phrase négative contient "ne...pas", "ne...jamais", "ne...plus"...'},
@@ -293,7 +277,6 @@ const GRAM = [
 ];
 
 const VOC = [
-  // Synonymes (7)
   {id:'v01',s:'fr',t:'voc',e:'💬',q:'Quel est un SYNONYME de "content" ?',c:['heureux','triste','fatigué','méchant'],a:'heureux',ex:'"Content" et "heureux" veulent dire la même chose : synonymes.'},
   {id:'v02',s:'fr',t:'voc',e:'💬',q:'Quel est un SYNONYME de "rapide" ?',c:['vif','lent','grand','doux'],a:'vif',ex:'"Vif", "rapide", "prompt" sont synonymes.'},
   {id:'v03',s:'fr',t:'voc',e:'💬',q:'Quel est un SYNONYME de "maison" ?',c:['demeure','voiture','école','forêt'],a:'demeure',ex:'"Demeure" et "maison" désignent la même chose.'},
@@ -301,7 +284,6 @@ const VOC = [
   {id:'v05',s:'fr',t:'voc',e:'💬',q:'Quel est un SYNONYME de "commencer" ?',c:['débuter','finir','courir','oublier'],a:'débuter',ex:'"Débuter" et "commencer" ont le même sens.'},
   {id:'v06',s:'fr',t:'voc',e:'💬',q:'Quel est un SYNONYME de "gentil" ?',c:['aimable','méchant','bruyant','lent'],a:'aimable',ex:'"Aimable", "gentil", "sympathique" sont synonymes.'},
   {id:'v07',s:'fr',t:'voc',e:'💬',q:'Quel est un SYNONYME de "beau" ?',c:['joli','laid','méchant','triste'],a:'joli',ex:'"Joli", "beau", "magnifique" sont synonymes.'},
-  // Contraires (7)
   {id:'v08',s:'fr',t:'voc',e:'💬',q:'Quel est le CONTRAIRE de "grand" ?',c:['petit','énorme','gros','large'],a:'petit',ex:'Grand ↔ petit. Ce sont des antonymes (contraires).'},
   {id:'v09',s:'fr',t:'voc',e:'💬',q:'Quel est le CONTRAIRE de "chaud" ?',c:['froid','tiède','brûlant','doux'],a:'froid',ex:'Chaud ↔ froid. Tiède = ni chaud ni froid.'},
   {id:'v10',s:'fr',t:'voc',e:'💬',q:'Quel est le CONTRAIRE de "rapide" ?',c:['lent','vif','agile','fort'],a:'lent',ex:'Rapide ↔ lent.'},
@@ -309,7 +291,6 @@ const VOC = [
   {id:'v12',s:'fr',t:'voc',e:'💬',q:'Quel est le CONTRAIRE de "arriver" ?',c:['partir','venir','courir','rester'],a:'partir',ex:'Arriver ↔ partir.'},
   {id:'v13',s:'fr',t:'voc',e:'💬',q:'Quel est le CONTRAIRE de "propre" ?',c:['sale','net','brillant','lisse'],a:'sale',ex:'Propre ↔ sale. "Net" est synonyme de propre.'},
   {id:'v14',s:'fr',t:'voc',e:'💬',q:'Quel est le CONTRAIRE de "possible" ?',c:['impossible','faisable','probable','certain'],a:'impossible',ex:'Le préfixe "im-" signifie "ne pas" : im-possible = pas possible.'},
-  // Familles de mots (6)
   {id:'v15',s:'fr',t:'voc',e:'💬',q:'Quel mot appartient à la famille de "CHANTER" ?',c:['chanson','danser','parler','courir'],a:'chanson',ex:'Famille de CHANTER : chanter, chanson, chanteur, chanteuse, chant...'},
   {id:'v16',s:'fr',t:'voc',e:'💬',q:'Quel mot appartient à la famille de "LIVRE" ?',c:['librairie','cahier','stylo','règle'],a:'librairie',ex:'Famille de LIVRE : livre, librairie, libraire, livret...'},
   {id:'v17',s:'fr',t:'voc',e:'💬',q:'Quel mot appartient à la famille de "MAISON" ?',c:['maisonnette','château','immeuble','appartement'],a:'maisonnette',ex:'Famille de MAISON : maison, maisonnette (diminutif).'},
@@ -319,7 +300,7 @@ const VOC = [
 ];
 
 /* ══════════════════════════════════════════════════════
-   BANQUE D'EXERCICES — MATHÉMATIQUES (statiques)
+   BANQUE D'EXERCICES — MATHÉMATIQUES
 ══════════════════════════════════════════════════════ */
 
 const FRAC = [
@@ -327,7 +308,7 @@ const FRAC = [
   {id:'f02',s:'ma',t:'frac',e:'½',q:'Dans la fraction 3/4, quel est le DÉNOMINATEUR ?',c:['4','3','7','1'],a:'4',ex:'Le DÉNOMINATEUR est le nombre du BAS de la fraction. 3/4 → dénominateur = 4.'},
   {id:'f03',s:'ma',t:'frac',e:'½',q:'Quelle fraction représente la MOITIÉ ?',c:['1/2','1/4','2/4','3/2'],a:'1/2',ex:'La moitié = 1 partie sur 2 = 1/2.'},
   {id:'f04',s:'ma',t:'frac',e:'½',q:'Quelle fraction représente le QUART ?',c:['1/4','1/2','2/4','3/4'],a:'1/4',ex:'Le quart = 1 partie sur 4 = 1/4.'},
-  {id:'f05',s:'ma',t:'frac',e:'½',q:'Une pizza coupée en 4 parts : j\'en mange 3. J\'ai mangé :',c:['3/4','1/4','4/3','3/3'],a:'3/4',ex:'3 parts sur 4 parts au total = 3/4 de la pizza.'},
+  {id:'f05',s:'ma',t:'frac',e:'½',q:"Une pizza coupée en 4 parts : j'en mange 3. J'ai mangé :",c:['3/4','1/4','4/3','3/3'],a:'3/4',ex:'3 parts sur 4 parts au total = 3/4 de la pizza.'},
   {id:'f06',s:'ma',t:'frac',e:'½',q:'Quelle fraction est la plus GRANDE ?',c:['3/4','1/4','2/4','0/4'],a:'3/4',ex:'Même dénominateur (4) → compare les numérateurs : 3 > 2 > 1 > 0.'},
   {id:'f07',s:'ma',t:'frac',e:'½',q:'Quelle fraction est la plus PETITE ?',c:['1/5','2/5','3/5','4/5'],a:'1/5',ex:'Même dénominateur (5) → le plus petit numérateur est 1.'},
   {id:'f08',s:'ma',t:'frac',e:'½',q:'1/2 de 10 = ?',c:['5','2','10','4'],a:'5',ex:'La moitié de 10 : 10 ÷ 2 = 5.'},
@@ -346,26 +327,26 @@ const FRAC = [
 ];
 
 const GEO = [
-  {id:'geo01',s:'ma',t:'geo',e:'📐',q:'Quel est le périmètre d\'un carré de côté 5 cm ?',c:['20 cm','25 cm','10 cm','15 cm'],a:'20 cm',ex:'Périmètre carré = 4 × côté = 4 × 5 = 20 cm.'},
-  {id:'geo02',s:'ma',t:'geo',e:'📐',q:'Périmètre d\'un rectangle : longueur 6 cm, largeur 3 cm ?',c:['18 cm','9 cm','12 cm','15 cm'],a:'18 cm',ex:'Périmètre rectangle = 2 × (longueur + largeur) = 2 × 9 = 18 cm.'},
-  {id:'geo03',s:'ma',t:'geo',e:'📐',q:'AIRE d\'un carré de côté 4 cm ?',c:['16 cm²','8 cm²','4 cm²','12 cm²'],a:'16 cm²',ex:'Aire carré = côté × côté = 4 × 4 = 16 cm².'},
-  {id:'geo04',s:'ma',t:'geo',e:'📐',q:'AIRE d\'un rectangle de longueur 5 cm et largeur 3 cm ?',c:['15 cm²','16 cm²','8 cm²','10 cm²'],a:'15 cm²',ex:'Aire rectangle = longueur × largeur = 5 × 3 = 15 cm².'},
+  {id:'geo01',s:'ma',t:'geo',e:'📐',q:"Quel est le périmètre d'un carré de côté 5 cm ?",c:['20 cm','25 cm','10 cm','15 cm'],a:'20 cm',ex:'Périmètre carré = 4 × côté = 4 × 5 = 20 cm.'},
+  {id:'geo02',s:'ma',t:'geo',e:'📐',q:"Périmètre d'un rectangle : longueur 6 cm, largeur 3 cm ?",c:['18 cm','9 cm','12 cm','15 cm'],a:'18 cm',ex:'Périmètre rectangle = 2 × (longueur + largeur) = 2 × 9 = 18 cm.'},
+  {id:'geo03',s:'ma',t:'geo',e:'📐',q:"AIRE d'un carré de côté 4 cm ?",c:['16 cm²','8 cm²','4 cm²','12 cm²'],a:'16 cm²',ex:'Aire carré = côté × côté = 4 × 4 = 16 cm².'},
+  {id:'geo04',s:'ma',t:'geo',e:'📐',q:"AIRE d'un rectangle de longueur 5 cm et largeur 3 cm ?",c:['15 cm²','16 cm²','8 cm²','10 cm²'],a:'15 cm²',ex:'Aire rectangle = longueur × largeur = 5 × 3 = 15 cm².'},
   {id:'geo05',s:'ma',t:'geo',e:'📐',q:'Combien de côtés a un HEXAGONE ?',c:['6','5','7','8'],a:'6',ex:'Hexa = six. Un hexagone a 6 côtés.'},
   {id:'geo06',s:'ma',t:'geo',e:'📐',q:'Combien de côtés a un PENTAGONE ?',c:['5','4','6','3'],a:'5',ex:'Penta = cinq. Un pentagone a 5 côtés.'},
-  {id:'geo07',s:'ma',t:'geo',e:'📐',q:'Un triangle avec 3 côtés ÉGAUX s\'appelle :',c:['équilatéral','isocèle','rectangle','scalène'],a:'équilatéral',ex:'Équilatéral = tous les côtés sont égaux.'},
-  {id:'geo08',s:'ma',t:'geo',e:'📐',q:'Périmètre d\'un triangle équilatéral de côté 4 cm ?',c:['12 cm','8 cm','16 cm','4 cm'],a:'12 cm',ex:'3 côtés égaux → périmètre = 3 × 4 = 12 cm.'},
-  {id:'geo09',s:'ma',t:'geo',e:'📐',q:'Deux droites qui ne se croisent JAMAIS sont :',c:['parallèles','perpendiculaires','sécantes','obliques'],a:'parallèles',ex:'Parallèles = toujours à la même distance, comme les rails d\'un train.'},
-  {id:'geo10',s:'ma',t:'geo',e:'📐',q:'Deux droites qui se croisent à 90° sont :',c:['perpendiculaires','parallèles','sécantes','obliques'],a:'perpendiculaires',ex:'Perpendiculaires = se croisent exactement à 90°. On vérifie avec l\'équerre.'},
+  {id:'geo07',s:'ma',t:'geo',e:'📐',q:"Un triangle avec 3 côtés ÉGAUX s'appelle :",c:['équilatéral','isocèle','rectangle','scalène'],a:'équilatéral',ex:'Équilatéral = tous les côtés sont égaux.'},
+  {id:'geo08',s:'ma',t:'geo',e:'📐',q:"Périmètre d'un triangle équilatéral de côté 4 cm ?",c:['12 cm','8 cm','16 cm','4 cm'],a:'12 cm',ex:'3 côtés égaux → périmètre = 3 × 4 = 12 cm.'},
+  {id:'geo09',s:'ma',t:'geo',e:'📐',q:'Deux droites qui ne se croisent JAMAIS sont :',c:['parallèles','perpendiculaires','sécantes','obliques'],a:'parallèles',ex:"Parallèles = toujours à la même distance, comme les rails d'un train."},
+  {id:'geo10',s:'ma',t:'geo',e:'📐',q:'Deux droites qui se croisent à 90° sont :',c:['perpendiculaires','parallèles','sécantes','obliques'],a:'perpendiculaires',ex:"Perpendiculaires = se croisent exactement à 90°. On vérifie avec l'équerre."},
   {id:'geo11',s:'ma',t:'geo',e:'📐',q:'Un angle droit mesure :',c:['90°','45°','180°','60°'],a:'90°',ex:"L'angle droit mesure exactement 90°. On le repère par un petit carré."},
-  {id:'geo12',s:'ma',t:'geo',e:'📐',q:'Comment s\'appelle le point central d\'un cercle ?',c:['centre','rayon','diamètre','circonférence'],a:'centre',ex:'Le centre est le point au milieu du cercle.'},
-  {id:'geo13',s:'ma',t:'geo',e:'📐',q:'Le diamètre d\'un cercle est :',c:['2 fois le rayon','3 fois le rayon','égal au rayon','4 fois le rayon'],a:'2 fois le rayon',ex:'Diamètre = 2 × rayon. Le diamètre passe par le centre.'},
-  {id:'geo14',s:'ma',t:'geo',e:'📐',q:'Périmètre d\'un carré de côté 3 cm ?',c:['12 cm','9 cm','6 cm','15 cm'],a:'12 cm',ex:'4 × 3 = 12 cm.'},
-  {id:'geo15',s:'ma',t:'geo',e:'📐',q:'Aire d\'un rectangle de 7 cm × 2 cm ?',c:['14 cm²','18 cm²','9 cm²','7 cm²'],a:'14 cm²',ex:'7 × 2 = 14 cm².'},
+  {id:'geo12',s:'ma',t:'geo',e:'📐',q:"Comment s'appelle le point central d'un cercle ?",c:['centre','rayon','diamètre','circonférence'],a:'centre',ex:'Le centre est le point au milieu du cercle.'},
+  {id:'geo13',s:'ma',t:'geo',e:'📐',q:"Le diamètre d'un cercle est :",c:['2 fois le rayon','3 fois le rayon','égal au rayon','4 fois le rayon'],a:'2 fois le rayon',ex:'Diamètre = 2 × rayon. Le diamètre passe par le centre.'},
+  {id:'geo14',s:'ma',t:'geo',e:'📐',q:"Périmètre d'un carré de côté 3 cm ?",c:['12 cm','9 cm','6 cm','15 cm'],a:'12 cm',ex:'4 × 3 = 12 cm.'},
+  {id:'geo15',s:'ma',t:'geo',e:'📐',q:"Aire d'un rectangle de 7 cm × 2 cm ?",c:['14 cm²','18 cm²','9 cm²','7 cm²'],a:'14 cm²',ex:'7 × 2 = 14 cm².'},
   {id:'geo16',s:'ma',t:'geo',e:'📐',q:'Un quadrilatère a combien de côtés ?',c:['4','3','5','6'],a:'4',ex:'Quadri = quatre. Carré, rectangle, losange... sont des quadrilatères.'},
-  {id:'geo17',s:'ma',t:'geo',e:'📐',q:'Périmètre d\'un carré de côté 8 cm ?',c:['32 cm','16 cm','64 cm','24 cm'],a:'32 cm',ex:'4 × 8 = 32 cm.'},
-  {id:'geo18',s:'ma',t:'geo',e:'📐',q:'Une figure est SYMÉTRIQUE si :',c:['les deux moitiés se superposent','elle a 4 côtés','elle est ronde','elle a des angles droits'],a:'les deux moitiés se superposent',ex:'Symétrie = en pliant la figure le long de l\'axe, les deux parties se superposent.'},
-  {id:'geo19',s:'ma',t:'geo',e:'📐',q:'Périmètre d\'un rectangle 10 cm × 4 cm ?',c:['28 cm','40 cm','14 cm','20 cm'],a:'28 cm',ex:'2 × (10 + 4) = 2 × 14 = 28 cm.'},
-  {id:'geo20',s:'ma',t:'geo',e:'📐',q:'Aire d\'un carré de côté 6 cm ?',c:['36 cm²','24 cm²','12 cm²','18 cm²'],a:'36 cm²',ex:'6 × 6 = 36 cm².'},
+  {id:'geo17',s:'ma',t:'geo',e:'📐',q:"Périmètre d'un carré de côté 8 cm ?",c:['32 cm','16 cm','64 cm','24 cm'],a:'32 cm',ex:'4 × 8 = 32 cm.'},
+  {id:'geo18',s:'ma',t:'geo',e:'📐',q:'Une figure est SYMÉTRIQUE si :',c:['les deux moitiés se superposent','elle a 4 côtés','elle est ronde','elle a des angles droits'],a:'les deux moitiés se superposent',ex:"Symétrie = en pliant la figure le long de l'axe, les deux parties se superposent."},
+  {id:'geo19',s:'ma',t:'geo',e:'📐',q:"Périmètre d'un rectangle 10 cm × 4 cm ?",c:['28 cm','40 cm','14 cm','20 cm'],a:'28 cm',ex:'2 × (10 + 4) = 2 × 14 = 28 cm.'},
+  {id:'geo20',s:'ma',t:'geo',e:'📐',q:"Aire d'un carré de côté 6 cm ?",c:['36 cm²','24 cm²','12 cm²','18 cm²'],a:'36 cm²',ex:'6 × 6 = 36 cm².'},
 ];
 
 /* ══════════════════════════════════════════════════════
@@ -382,7 +363,6 @@ function genMultDiv() {
   for(let a=2;a<=12;a++){
     for(let b=2;b<=12;b++){
       const r=a*b;
-      // Wrong answers: plausibles et différents
       const wset=new Set();
       for(const d of [a,b,1,2,-a,-b,-1,-2]){
         const w=r+d;
@@ -392,7 +372,6 @@ function genMultDiv() {
       while(wset.size<3){const w=r+Math.floor(Math.random()*6)+1;if(w!==r)wset.add(w);}
       exs.push({id:`m${a}_${b}`,s:'ma',t:'mult',e:'✖️',q:`${a} × ${b} = ?`,
         c:sh([String(r),...[...wset].slice(0,3).map(String)]),a:String(r),ex:`${a} × ${b} = ${r}`});
-      // Division correspondante
       const bws=[b+1,b>2?b-1:b+3,b+2].filter(x=>x>0&&x!==b).slice(0,3);
       while(bws.length<3)bws.push(b+bws.length+1);
       exs.push({id:`d${r}_${a}`,s:'ma',t:'div',e:'➗',q:`${r} ÷ ${a} = ?`,
@@ -437,7 +416,7 @@ const TOPIC_META={
 let S={
   loaded:false,view:'home',
   exercises:[],
-  session:[],sessionIdx:0,sessionAnswers:[],
+  session:[],sessionIdx:0,sessionAnswers:[],sessionSubject:null,
   showFeedback:false,selectedAnswer:null,
   journal:{},streak:0,longestStreak:0,
   totalStars:0,totalCorrect:0,totalSessions:0,
@@ -477,7 +456,11 @@ function updateStreak(){
   }
 }
 
-function pickSession(){
+/* ══════════════════════════════════════════════════════
+   SESSION
+══════════════════════════════════════════════════════ */
+
+function pickSession(subject){
   const recent=new Set();
   for(let i=1;i<=14;i++){
     const d=new Date(Date.now()-i*86400000).toISOString().slice(0,10);
@@ -490,15 +473,25 @@ function pickSession(){
     const use=fresh.length>=n?fresh:[...fresh,...pool.filter(e=>recent.has(e.id))];
     return shuffle(use).slice(0,n);
   }
+  // Séance uniquement Français (10 exercices)
+  if(subject==='fr'){
+    return shuffle([...pickN('conj',4),...pickN('orth',3),...pickN('gram',2),...pickN('voc',1)]);
+  }
+  // Séance uniquement Maths (10 exercices)
+  if(subject==='ma'){
+    return shuffle([...pickN('mult',4),...pickN('div',2),...pickN('frac',2),...pickN('geo',2)]);
+  }
+  // Séance mixte (13 exercices)
   return shuffle([
     ...pickN('conj',3),...pickN('orth',2),...pickN('gram',1),...pickN('voc',1),
     ...pickN('mult',3),...pickN('div',1),...pickN('frac',1),...pickN('geo',1),
   ]);
 }
 
-function startSession(){
-  const session=pickSession();
-  setState({view:'session',session,sessionIdx:0,sessionAnswers:[],showFeedback:false,selectedAnswer:null});
+function startSession(subject){
+  const sub=subject||null;
+  const session=pickSession(sub);
+  setState({view:'session',session,sessionIdx:0,sessionAnswers:[],showFeedback:false,selectedAnswer:null,sessionSubject:sub});
 }
 
 function selectAnswer(ans){
@@ -536,7 +529,7 @@ function endSession(){
   const badges=[...S.badges,...earned];
   Object.assign(S,{journal,streak,longestStreak,totalStars,totalCorrect,totalSessions,bestScore,badges});
   saveState();
-  setState({view:'result',lastResult:{correct,total,stars,pct,earned}});
+  setState({view:'result',lastResult:{correct,total,stars,pct,earned,subject:S.sessionSubject}});
 }
 
 /* ══════════════════════════════════════════════════════
@@ -562,13 +555,12 @@ function renderNav(){
 function renderHome(){
   const today=todayStr();
   const done=S.journal[today];
-  // Today card
   let todayCard='';
   if(done){
     const starStr='⭐'.repeat(done.stars)+'☆'.repeat(3-done.stars);
     todayCard=`<div class="done-card pop-in"><div style="font-size:24px">${starStr}</div><div class="done-score">${done.pct}%</div><div class="done-label">Super travail aujourd\'hui !</div><div style="font-size:13px;color:#15803D;margin-top:6px">${done.correct}/${done.total} bonnes réponses</div></div>`;
   }else{
-    todayCard=`<div class="today-card pop-in"><div class="tc-label">📅 Séance du jour</div><div class="tc-title">Prêt à réviser ? 🚀</div><div class="tc-sub">13 exercices · ~15 minutes</div><button class="btn-start" data-action="start">▶ Commencer</button></div>`;
+    todayCard=`<div class="today-card pop-in"><div class="tc-label">📅 Séance du jour</div><div class="tc-title">Prêt à réviser ? 🚀</div><div class="tc-sub">Choisis une matière ci-dessous, ou lance une séance mixte !</div><button class="btn-start" data-action="start:">🎲 Tout mélangé</button></div>`;
   }
   // Streak mini (last 7 days)
   const days=['D','L','M','M','J','V','S'];
@@ -576,46 +568,62 @@ function renderHome(){
   for(let i=6;i>=0;i--){
     const d=new Date(Date.now()-i*86400000);
     const ds=d.toISOString().slice(0,10);
-    const dow=days[d.getDay()];
     const cl=ds===today?'today':S.journal[ds]?'done':'miss';
-    const ico=S.journal[ds]?'✓':cl==='today'?'·':'·';
-    streakHtml+=`<div class="streak-day ${cl}" title="${ds}">${ico}</div>`;
+    const ico=S.journal[ds]?'✓':'·';
+    streakHtml+=`<div class="streak-day ${cl}">${ico}</div>`;
   }
   streakHtml+='</div>';
-  // Subject grid
+  // Subject grid — fr & ma clickable, hg & sc coming soon
   const frCount=S.exercises.filter(e=>e.s==='fr').length;
   const maCount=S.exercises.filter(e=>e.s==='ma').length;
   const subjGrid=`<div class="subj-grid">
-    <div class="subj-card fr"><div class="sc-emoji">📖</div><div class="sc-name">Français</div><div class="sc-count">${frCount} exercices</div></div>
-    <div class="subj-card ma"><div class="sc-emoji">🔢</div><div class="sc-name">Mathématiques</div><div class="sc-count">${maCount} exercices</div></div>
+    <div class="subj-card fr" data-action="start:fr">
+      <div class="sc-badge">Tap !</div>
+      <div class="sc-emoji">📖</div>
+      <div class="sc-name">Français</div>
+      <div class="sc-count">${frCount} exercices</div>
+    </div>
+    <div class="subj-card ma" data-action="start:ma">
+      <div class="sc-badge">Tap !</div>
+      <div class="sc-emoji">🔢</div>
+      <div class="sc-name">Mathématiques</div>
+      <div class="sc-count">${maCount} exercices</div>
+    </div>
+    <div class="subj-card hg soon">
+      <div class="sc-emoji">🗺️</div>
+      <div class="sc-name">Histoire-Géo</div>
+      <div class="sc-count">Bientôt disponible</div>
+    </div>
+    <div class="subj-card sc soon">
+      <div class="sc-emoji">🔬</div>
+      <div class="sc-name">Sciences</div>
+      <div class="sc-count">Bientôt disponible</div>
+    </div>
   </div>`;
-  // Stats row
   const statsRow=`<div class="stats-grid" style="margin-bottom:14px">
     <div class="stat-card"><div class="stat-num" style="color:var(--streak)">🔥 ${S.streak}</div><div class="stat-lbl">Jours de suite</div></div>
     <div class="stat-card"><div class="stat-num" style="color:var(--star)">⭐ ${S.totalStars}</div><div class="stat-lbl">Étoiles gagnées</div></div>
   </div>`;
   return`<div class="hdr"><div class="hdr-title">Révise! 📚</div><div class="hdr-pills"><div class="pill s">🔥 ${S.streak}</div><div class="pill e">⭐ ${S.totalStars}</div></div></div>
 ${todayCard}
-${done?`<div style="margin:0 16px 14px"><button class="btn-start" style="background:var(--primary);color:white;width:100%;justify-content:center" data-action="start">▶ Encore une séance !</button></div>`:''}
-<div class="section-title">Matières</div>${subjGrid}
+${done?`<div style="margin:0 16px 14px"><button class="btn-start" style="background:var(--primary);color:white;width:100%;justify-content:center" data-action="start:">🎲 Encore une séance !</button></div>`:''}
+<div class="section-title">Choisir une matière</div>${subjGrid}
 <div class="section-title">Mes 7 derniers jours</div>${streakHtml}
 ${statsRow}`;
 }
 
 function renderSession(){
-  if(!S.session.length)return`<div class="card" style="margin-top:32px;text-align:center"><p>Démarre une séance depuis l\'accueil !</p></div>`+renderNav();
+  if(!S.session.length)return`<div class="card" style="margin-top:32px;text-align:center"><p>Démarre une séance depuis l\'accueil !</p></div>`;
   const ex=S.session[S.sessionIdx];
   const total=S.session.length;
   const idx=S.sessionIdx;
   const pct=Math.round((idx/total)*100);
   const tm=TOPIC_META[ex.t]||{lbl:ex.t,e:'📝',s:'fr'};
   const subj=ex.s==='fr'?'fr':'ma';
-  // Progress bar
   const pbar=`<div class="pbar-wrap"><div class="pbar-fill" style="width:${pct}%"></div></div>`;
-  const hdr=`<div class="sess-hdr"><div class="sess-counter">❓ ${idx+1} / ${total}</div><div class="topic-tag ${subj}">${tm.e} ${esc(tm.lbl)}</div></div>`;
-  // Question
+  const subjLabel=S.sessionSubject==='fr'?'📖 Français':S.sessionSubject==='ma'?'🔢 Maths':'🎲 Mixte';
+  const hdr=`<div class="sess-hdr"><div class="sess-counter">❓ ${idx+1} / ${total} &nbsp;<span style="font-size:11px;color:var(--muted)">${subjLabel}</span></div><div class="topic-tag ${subj}">${tm.e} ${esc(tm.lbl)}</div></div>`;
   const qCard=`<div class="q-card"><div class="q-emoji">${ex.e}</div><div class="q-text">${esc(ex.q)}</div></div>`;
-  // Choices
   const nc=ex.c.length;
   const grid=nc<=2?'c2':'c4';
   let choices=`<div class="choices ${grid}">`;
@@ -629,7 +637,6 @@ function renderSession(){
     choices+=`<button class="cbtn ${cl}" data-action="answer:${esc(ch)}" ${S.showFeedback?'disabled':''}>${esc(ch)}</button>`;
   });
   choices+='</div>';
-  // Feedback
   let fb='';
   if(S.showFeedback){
     const ok=S.selectedAnswer===ex.a;
@@ -643,12 +650,14 @@ ${pbar}${hdr}${qCard}${choices}${fb}`;
 }
 
 function renderResult(){
-  const r=S.lastResult||{correct:0,total:13,stars:0,pct:0,earned:[]};
+  const r=S.lastResult||{correct:0,total:10,stars:0,pct:0,earned:[],subject:null};
   const emojis=['😅','😊','😄','🤩'];
   const emo=emojis[r.stars]||'😊';
   const starStr='⭐'.repeat(r.stars)+'☆'.repeat(3-r.stars);
   const msgs=['Continue comme ça !','Bien joué !','Super travail !','Parfait ! Incroyable !'];
   const msg=msgs[r.stars]||'Bien joué !';
+  const replaySub=r.subject||'';
+  const replayLabel=r.subject==='fr'?'📖 Encore du Français !':r.subject==='ma'?'🔢 Encore des Maths !':'🎲 Encore une séance !';
   let earnedHtml='';
   r.earned.forEach(bid=>{
     const b=BADGES.find(x=>x.id===bid);
@@ -663,8 +672,8 @@ function renderResult(){
   <div style="font-size:18px;font-weight:800;color:var(--text)">${msg}</div>
 </div>
 ${earnedHtml}
-<button class="btn-again" data-action="start">▶ Encore une séance !</button>
-<button class="btn-home" data-action="nav:home">🏠 Retour à l'accueil</button>`;
+<button class="btn-again" data-action="start:${replaySub}">${replayLabel}</button>
+<button class="btn-home" data-action="nav:home">🏠 Choisir une autre matière</button>`;
 }
 
 function renderProgress(){
@@ -711,7 +720,7 @@ document.addEventListener('click',e=>{
   const action=ci>=0?raw.slice(0,ci):raw;
   const arg=ci>=0?raw.slice(ci+1):'';
   if(action==='nav'){setState({view:arg});}
-  else if(action==='start'){if(!S.session.length||S.view!=='session')startSession();else setState({view:'session'});}
+  else if(action==='start'){startSession(arg||null);}
   else if(action==='answer'){selectAnswer(arg);}
   else if(action==='next'){nextExercise();}
 });
